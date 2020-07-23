@@ -1,9 +1,13 @@
 package com.xz.domain;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
+@ToString
 public class City {
     /**
      * 城市编号
@@ -19,6 +23,7 @@ public class City {
     /**
      * 城市名称
      */
+    @NotBlank
     private String cityName;
 
     /**

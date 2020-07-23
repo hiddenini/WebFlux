@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 public class CityController {
@@ -21,7 +23,8 @@ public class CityController {
      * 添加city
      */
     @RequestMapping(value = "/add")
-    public Mono<City> add(@RequestBody City city) {
+    public Mono<City> add(@Valid @RequestBody City city) {
+        log.info("enter add params:{}", city.toString());
         return cityService.addCity(city);
     }
 
@@ -47,7 +50,7 @@ public class CityController {
                  */
 
                 //如果需要操作数据,并且返回一个mono,使用flatMap
-                flatMap(city1 -> {
+                        flatMap(city1 -> {
                     city1.setCityName(city.getCityName());
                     city1.setProvinceId(city.getProvinceId());
                     city1.setDescription(city.getDescription());
@@ -72,9 +75,15 @@ public class CityController {
      */
     @GetMapping(value = "/getById")
     public Mono<ResponseEntity<City>> getById(String id) {
+        log.info("enter add getById param:{}", id);
         return cityService.getById(id).map(city -> new ResponseEntity<>(city, HttpStatus.OK))
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
+    @GetMapping(value = "/getCityById/{id}")
+    public Mono<ResponseEntity<City>> getCityById(@PathVariable("id") String id) {
+        log.info("enter add getCityById param:{}", id);
+        return cityService.getById(id).map(city -> new ResponseEntity<>(city, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
