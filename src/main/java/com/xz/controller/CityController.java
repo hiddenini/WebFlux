@@ -25,7 +25,12 @@ public class CityController {
     @RequestMapping(value = "/add")
     public Mono<City> add(@Valid @RequestBody City city) {
         log.info("enter add params:{}", city.toString());
-        return cityService.addCity(city);
+        Mono<City> cityMono = cityService.addCity(city);
+        /**
+         * 这里订阅的话会执行2次save,mongo中会插入2条数据
+         */
+        //cityMono.subscribe(System.out::println);
+        return cityMono;
     }
 
     /**
